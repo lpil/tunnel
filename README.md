@@ -6,6 +6,8 @@ Tunnel
 Trippy JS art.
 
 ```sh
+npm install
+
 # Run the test runner
 npm test
 
