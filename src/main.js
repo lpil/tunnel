@@ -1,17 +1,40 @@
 import "./style.css";
-import { context }        from "./canvas";
-import { centredCircles } from "./plot";
-import { perlin }         from "../vendor/noise";
-
-window.perlin = perlin;
+import { context }       from "./canvas";
+import { centredCircle } from "./shape";
+import { perlin }        from "../vendor/noise";
+import { newFloat32History } from "./history_buffer";
 
 context.strokeStyle = "hotpink";
 context.lineWidth = 2;
 
-const radii = [
-  0,  1,  2,  3,  4,  5,  6,  7,  8,  9,
-  10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-  20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-].map(x => 35 * x + 20);
+let perlinI        = 0.05;
+const perlinD      = 0.05;
+const noiseAmp     = 50;
+const stepAmp      = 30;
+const noiseHistory = newFloat32History(32);
 
-centredCircles(context, window, radii);
+{
+  let i = 0;
+  while (i < noiseHistory.length) {
+    const noise = perlin(perlinI) * noiseAmp;
+    const step  = i * stepAmp;
+    noiseHistory.put(step + noise);
+    noiseHistory.step();
+    perlinI += perlinD;
+    i++;
+  }
+}
+
+{
+  let i = 0;
+  let r = 0;
+  while (i < noiseHistory.length && r !== undefined) {
+    r = noiseHistory.get(i);
+    context.beginPath();
+    centredCircle(context, window, r);
+    context.stroke();
+    i++;
+  }
+}
+
+window.noiseHistory = noiseHistory;
