@@ -34,16 +34,33 @@ describe(newFloat32History, () => {
   it("works if the iteration is >= than length", () => {
     const history = newFloat32History(3);
     history.put(1);
+    expect(history.get()).to.equal(1);
+    expect(history.get(1)).to.equal(undefined);
+    expect(history.get(2)).to.equal(undefined);
+    expect(history.get(3)).to.equal(undefined);
     history.step();
     history.put(2);
+    expect(history.get()).to.equal(2);
+    expect(history.get(1)).to.equal(1);
+    expect(history.get(2)).to.equal(undefined);
+    expect(history.get(3)).to.equal(undefined);
     history.step();
     history.put(3);
+    expect(history.get()).to.equal(3);
+    expect(history.get(1)).to.equal(2);
+    expect(history.get(2)).to.equal(1);
+    expect(history.get(3)).to.equal(undefined);
     history.step();
     history.put(4);
     expect(history.get()).to.equal(4);
-    expect(history.get(0)).to.equal(4);
     expect(history.get(1)).to.equal(3);
     expect(history.get(2)).to.equal(2);
+    expect(history.get(3)).to.equal(undefined);
+    history.step();
+    history.put(5);
+    expect(history.get()).to.equal(5);
+    expect(history.get(1)).to.equal(4);
+    expect(history.get(2)).to.equal(3);
     expect(history.get(3)).to.equal(undefined);
   });
 

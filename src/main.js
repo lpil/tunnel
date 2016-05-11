@@ -13,6 +13,9 @@ const noiseAmp     = 50;
 const stepAmp      = 30;
 const noiseHistory = newFloat32History(32);
 
+const foo = newFloat32History(5);
+window.foo = foo;
+
 {
   let i = 0;
   while (i < noiseHistory.length) {

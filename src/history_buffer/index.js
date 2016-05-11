@@ -1,10 +1,10 @@
 function index(len, itr, n) {
   const offset = itr % len;
-  const index = offset - n;
-  if (index >= 0) {
-    return index;
+  const i = offset - n;
+  if (i >= 0) {
+    return i;
   } else {
-    return len + index;
+    return len + i;
   }
 }
 
