@@ -20,15 +20,31 @@ describe(newFloat32History, () => {
 
   it("can store a sequence of numbers", () => {
     const history = newFloat32History(3);
-    history.put(3.3333);
+    history.put(10);
     history.step();
-    history.put(2.2222);
-    expect(history.get()).to.be.within(2.2221, 2.2223);
-    expect(history.get(0)).to.be.within(2.2221, 2.2223);
-    expect(history.get(1)).to.be.within(3.3332, 3.3334);
+    history.put(20);
+    expect(history.get()).to.equal(20);
+    expect(history.get(0)).to.equal(20);
+    expect(history.get(1)).to.equal(10);
     expect(history.get(2)).to.equal(undefined);
     expect(history.get(3)).to.equal(undefined);
     expect(history.get(-1)).to.equal(undefined);
+  });
+
+  it("works if the iteration is >= than length", () => {
+    const history = newFloat32History(3);
+    history.put(1);
+    history.step();
+    history.put(2);
+    history.step();
+    history.put(3);
+    history.step();
+    history.put(4);
+    expect(history.get()).to.equal(4);
+    expect(history.get(0)).to.equal(4);
+    expect(history.get(1)).to.equal(3);
+    expect(history.get(2)).to.equal(2);
+    expect(history.get(3)).to.equal(undefined);
   });
 
   it("cannot be externally modified", () => {

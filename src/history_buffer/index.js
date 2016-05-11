@@ -1,3 +1,13 @@
+function index(len, itr, n) {
+  const offset = itr % len;
+  const index = offset - n;
+  if (index >= 0) {
+    return index;
+  } else {
+    return len + index;
+  }
+}
+
 function newFloat32History(length) {
   let iteration = 0;
   const store   = new Float32Array(length);
@@ -9,8 +19,8 @@ function newFloat32History(length) {
 
   const get = (n = 0) => {
     if (n < length && n <= iteration && n >= 0) {
-      const index = (iteration % length) - n;
-      return store[index];
+      const i = index(length, iteration, n);
+      return store[i];
     }
   };
 
