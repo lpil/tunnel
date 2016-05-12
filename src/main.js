@@ -7,15 +7,15 @@ context.strokeStyle = "hotpink";
 context.lineWidth = 2;
 
 const seed         = 0.1;
-const perlinInc    = 0.05;
-const noiseAmp     = 100;
-const stepAmp      = 30;
+const perlinInc    = 0.006;
+const noiseAmp     = 200;
+const stepAmp      = 55;
 const noiseHistory = newNoiseBuffer(32, seed, perlinInc, noiseAmp);
 
-{
-  let i = 0;
-  while (i < noiseHistory.length) {
-    const noise  = noiseHistory.get(i);
+function plot(buffer) {
+  let i = 1;
+  while (i < buffer.length) {
+    const noise  = buffer.get(i);
     const radius = noise + i * stepAmp;
     context.beginPath();
     centredCircle(context, window, radius);
@@ -24,4 +24,11 @@ const noiseHistory = newNoiseBuffer(32, seed, perlinInc, noiseAmp);
   }
 }
 
-window.noiseHistory = noiseHistory;
+function drawFrame() {
+  context.fillStyle = "rgba(0, 0, 0, 0.10)";
+  context.fillRect(0, 0, window.innerWidth, window.innerHeight);
+  noiseHistory.step();
+  plot(noiseHistory);
+  requestAnimationFrame(drawFrame);
+}
+drawFrame();
