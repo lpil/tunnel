@@ -1,22 +1,25 @@
 import "./style.css";
-import { context }       from "./canvas";
-import { centredCircle } from "./shape";
-import { newNoiseBuffer } from "./noise_buffer";
+import { context }             from "./canvas";
+import { centredCircle }       from "./shape";
+import { newNoiseBuffer }      from "./noise_buffer";
+import { newRandColourBuffer } from "./rand_colour_buffer";
 
-context.strokeStyle = "hotpink";
 context.lineWidth = 2;
 
-const seed         = 0.1;
-const perlinInc    = 0.006;
-const noiseAmp     = 200;
-const stepAmp      = 55;
-const noiseHistory = newNoiseBuffer(32, seed, perlinInc, noiseAmp);
+const seed          = 0.1;
+const perlinInc     = 0.003;
+const noiseAmp      = 150;
+const stepAmp       = 55;
+const noiseHistory  = newNoiseBuffer(32, seed, perlinInc, noiseAmp);
+const colourHistory = newRandColourBuffer(32);
 
-function plot(buffer) {
+function plot(noiseBuffer, colourBuffer) {
   let i = 1;
-  while (i < buffer.length) {
-    const noise  = buffer.get(i);
+  while (i < noiseBuffer.length) {
+    const noise  = noiseBuffer.get(i);
     const radius = noise + i * stepAmp;
+    const colour = colourBuffer.get(i);
+    context.strokeStyle = colour;
     context.beginPath();
     centredCircle(context, window, radius);
     context.stroke();
@@ -25,10 +28,12 @@ function plot(buffer) {
 }
 
 function drawFrame() {
-  context.fillStyle = "rgba(0, 0, 0, 0.10)";
+  context.fillStyle = "rgba(0, 0, 0, 0.05)";
   context.fillRect(0, 0, window.innerWidth, window.innerHeight);
+  context.fillStyle = "";
   noiseHistory.step();
-  plot(noiseHistory);
+  colourHistory.step();
+  plot(noiseHistory, colourHistory);
   requestAnimationFrame(drawFrame);
 }
 drawFrame();

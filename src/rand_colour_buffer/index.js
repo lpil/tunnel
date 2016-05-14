@@ -3,12 +3,12 @@ import { perlin }          from "../../vendor/noise";
 import rand                from "../rand";
 
 function newColour(seed) {
-  const hue = Math.round(perlin(seed) * 360);
-  return `hsl(${hue}, 200, 200)`;
+  const hue = Math.round(perlin(seed) * 360 * 2);
+  return `hsl(${hue}, 90%, 50%)`;
 }
 
 function newRandColourBuffer(length, seed = rand(200)) {
-  const incrementSize = 0.05;
+  const incrementSize = 0.004;
   const buffer = newArrayHistory(length);
   const get = buffer.get;
 
