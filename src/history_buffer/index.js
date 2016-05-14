@@ -8,12 +8,16 @@ function index(len, itr, n) {
   }
 }
 
-function newFloat32History(length) {
+function numCheck(x) {
+  if (typeof x !== "number") { throw NaN; }
+}
+
+function newHistoryBuffer(length, checker, bufferClass) {
   let iteration = 0;
-  const store   = new Float32Array(length);
+  const store   = new bufferClass(length);
 
   const put = x => {
-    if (typeof x !== "number") { throw NaN; }
+    checker(x);
     store[iteration % length] = x;
   };
 
@@ -27,6 +31,10 @@ function newFloat32History(length) {
   const step = () => iteration++;
 
   return Object.freeze({ put, get, length, step });
+}
+
+function newFloat32History(length) {
+  return newHistoryBuffer(length, numCheck, Float32Array);
 }
 
 export { newFloat32History };
