@@ -8,16 +8,11 @@ function index(len, itr, n) {
   }
 }
 
-function numCheck(x) {
-  if (typeof x !== "number") { throw NaN; }
-}
-
-function newHistoryBuffer(length, checker, bufferClass) {
+function newHistoryBuffer(length, bufferClass) {
   let iteration = 0;
   const store   = new bufferClass(length);
 
   const put = x => {
-    checker(x);
     store[iteration % length] = x;
   };
 
@@ -34,7 +29,11 @@ function newHistoryBuffer(length, checker, bufferClass) {
 }
 
 function newFloat32History(length) {
-  return newHistoryBuffer(length, numCheck, Float32Array);
+  return newHistoryBuffer(length, Float32Array);
 }
 
-export { newFloat32History };
+function newArrayHistory(length) {
+  return newHistoryBuffer(length, Array);
+}
+
+export { newFloat32History, newArrayHistory };

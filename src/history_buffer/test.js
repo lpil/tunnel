@@ -1,4 +1,4 @@
-import { newFloat32History } from ".";
+import { newArrayHistory, newFloat32History } from ".";
 
 describe(newFloat32History, () => {
   it("sets length", () => {
@@ -11,12 +11,6 @@ describe(newFloat32History, () => {
     history.put(3.3333);
     expect(history.get()).to.be.within(3.3333, 3.3334);
   });
-
-  it("throws with non-numbers", () => {
-    const history = newFloat32History(2);
-    expect(() => history.put("hello")).to.throw(NaN);
-  });
-
 
   it("can store a sequence of numbers", () => {
     const history = newFloat32History(3);
@@ -66,6 +60,44 @@ describe(newFloat32History, () => {
 
   it("cannot be externally modified", () => {
     const history = newFloat32History(3);
+    expect(() => history.length = 4).to.throw();
+    expect(history.length).to.equal(3);
+  });
+});
+
+describe(newArrayHistory, () => {
+  it("sets length", () => {
+    const history = newArrayHistory(10);
+    expect(history.length).to.equal(10);
+  });
+
+  it("stores numbers", () => {
+    const history = newArrayHistory(2);
+    history.put(3.3333);
+    expect(history.get()).to.be.within(3.3333, 3.3334);
+  });
+
+  it("stores other things too", () => {
+    const history = newArrayHistory(2);
+    history.put("Hello");
+    expect(history.get()).to.equal("Hello");
+  });
+
+  it("can store several values", () => {
+    const history = newArrayHistory(3);
+    history.put(10);
+    history.step();
+    history.put(20);
+    expect(history.get()).to.equal(20);
+    expect(history.get(0)).to.equal(20);
+    expect(history.get(1)).to.equal(10);
+    expect(history.get(2)).to.equal(undefined);
+    expect(history.get(3)).to.equal(undefined);
+    expect(history.get(-1)).to.equal(undefined);
+  });
+
+  it("cannot be externally modified", () => {
+    const history = newArrayHistory(3);
     expect(() => history.length = 4).to.throw();
     expect(history.length).to.equal(3);
   });
